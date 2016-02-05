@@ -11,7 +11,13 @@ module Screencap
       }.merge(args).collect {|k,v| "#{k}=#{v}"}
       puts RASTERIZE.to_s, params if(args[:debug])
       result = Phantomjs.run(RASTERIZE.to_s, *params)
-      puts result if(args[:debug])
+      if args[:debug]
+        if args[:debug] == :file
+          File.write("#{path}.log", result)
+        else
+          puts result
+        end
+      end
       raise Screencap::Error, "Could not load URL #{url}" if result.match /Unable to load/
     end
 
